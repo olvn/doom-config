@@ -112,3 +112,40 @@
         "3" #'winum-select-window-3
         "4" #'winum-select-window-4
         "5" #'winum-select-window-5))
+
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
+(use-package! org-roam-timestamps
+  :after org-roam
+  :config (org-roam-timestamps-mode))
+
+(use-package! magit-delta
+  :hook (magit-mode . magit-delta-mode))
+
+(after! git-gutter
+  (global-git-gutter-mode +1))
+
+(after! hyperbole
+  (hyperbole-mode 1))
+
+(use-package! hyperbole)
+
+
+(after! dumb-jump
+  (map! :leader
+        :desc "Dumb Jump"
+        "d d" #'dumb-jump-go
+        "d b" #'dumb-jump-back))

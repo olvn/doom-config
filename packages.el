@@ -53,3 +53,14 @@
 
 (package! color-theme-modern)
 (package! nov)
+(package! acme-theme)
+
+(unpin! org-roam)
+(package! org-roam-ui)
+
+(package! org-roam-timestamps)
+
+(package! magit-delta)
+(package! git-timemachine)
+(package! git-gutter)
+(package! hyperbole)
