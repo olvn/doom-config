@@ -64,3 +64,12 @@
 (package! git-timemachine)
 (package! git-gutter)
 (package! hyperbole)
+
+(package! myron-themes
+  :recipe (:host github
+           :repo "neeasade/myron-themes"
+           :files ("*.el" "themes/*.el")))
+
+(package! ef-themes)
+
+(package! srcery-theme)

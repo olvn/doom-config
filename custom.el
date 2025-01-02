@@ -5,7 +5,12 @@
  ;; If there is more than one, they won't work right.
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(safe-local-variable-values
-   '((hsys-org-enable-smart-keys . t)
+   '((eval add-hook 'before-save-hook 'py-isort-before-save)
+     (lsp-pylsp-plugins-pydocstyle-enabled)
+     (lsp-pylsp-plugins-isort-enabled . t)
+     (lsp-pylsp-plugins-flake8-enabled . t)
+     (lsp-pylsp-plugins-yapf-enabled)
+     (hsys-org-enable-smart-keys . t)
      (org-cycle-global-at-bob . t)
      (eval with-eval-after-load 'cider
       (cider-register-cljs-repl-type 'bro "(do (user/run) (user/browser-repl))")))))

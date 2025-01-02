@@ -143,9 +143,74 @@
 
 (use-package! hyperbole)
 
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :init
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-position 'at-point
+        lsp-ui-sideline-enable t
+        ;; lsp-ui-sideline-show-diagnostics t
+        lsp-ui-sideline-show-hover t
+        ;; lsp-ui-sideline-show-code-actions t
+        lsp-ui-peek-enable t
+        lsp-ui-imenu-enable t))
 
-(after! dumb-jump
-  (map! :leader
-        :desc "Dumb Jump"
-        "d d" #'dumb-jump-go
-        "d b" #'dumb-jump-back))
+(after! (clojure-mode cider-mode)
+  (map! :map clojure-mode-map
+        :localleader
+        (:prefix ("g" . "goto")
+         :desc "jump back" "b" #'xref-go-back
+         :desc "jump fwd" "B" #'xref-go-forward
+         :desc "Find definition" "g" #'lsp-find-definition
+         :desc "Find references" "r" #'lsp-find-references
+         :desc "Peek references" "R" #'lsp-ui-peek-find-references)))
+
+;; Define keybindings for LSP and lsp-ui functions
+(map! :after python
+      :map python-mode-map
+      :localleader
+      (:prefix ("g" . "goto")
+       :desc "jump back" "b" #'xref-go-back
+       :desc "jump fwd" "B" #'xref-go-forward
+       :desc "Find definition" "g" #'lsp-find-definition
+       :desc "Find references" "r" #'lsp-find-references
+       :desc "Peek references" "R" #'lsp-ui-peek-find-references
+       :desc "Show doc" "h" #'lsp-ui-doc-show
+       :desc "Imenu" "i" #'lsp-ui-imenu))
+
+
+;; Will only work on macos/linux
+(after! counsel
+  (setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s || true"))
+
+(after! python
+  (map! :localleader
+        :map python-mode-map
+        "," #'python-shell-send-buffer
+        "b" #'python-shell-send-buffer
+        "f" #'python-shell-send-defun
+        "r" #'python-shell-send-region
+        "s" #'python-shell-send-string
+        "i" #'python-shell-switch-to-shell
+        "e" #'python-shell-send-statement
+        "h" #'pylookup-lookup))
+
+(after! parinfer
+  (add-hook! 'ediff-prepare-buffer-hook #'parinfer-mode-disable)
+  (add-hook! 'ediff-startup-hook #'parinfer-mode-disable))
+
+(defun parinfer-mode-disable ()
+  "Fully disable Parinfer mode in Ediff buffers."
+  (when (and (bound-and-true-p parinfer-mode)
+             (derived-mode-p 'ediff-mode 'ediff-ancestor-mode))
+    (parinfer-mode -1)))
+
+(setq org-capture-templates
+      '(("d" "Diary" entry
+         (file+olp+datetree "~/org/horizon.org")
+         "* %?\n  Entered on %U\n"
+         :tree-type week
+         :empty-lines 1)))
+
+(setq org-agenda-files '("~/org"))
